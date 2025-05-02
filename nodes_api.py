@@ -106,6 +106,7 @@ class GPTImage1Generate(ComfyNodeABC):
                         "default": "",
                         "display": "string",
                         "tooltip": "API Auth Token",
+                        "serialize": False,
                     },
                 ),
                 "model": (
