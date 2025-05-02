@@ -1,4 +1,5 @@
 import io
+import os
 from inspect import cleandoc
 
 from comfy.utils import common_upscale
@@ -100,15 +101,6 @@ class GPTImage1Generate(ComfyNodeABC):
                         "tooltip": "API Base URL",
                     },
                 ),
-                "auth_token": (
-                    IO.STRING,
-                    {
-                        "default": "",
-                        "display": "string",
-                        "tooltip": "API Auth Token",
-                        "serialize": False,
-                    },
-                ),
                 "model": (
                     IO.STRING,
                     {
@@ -194,7 +186,6 @@ class GPTImage1Generate(ComfyNodeABC):
         self,
         prompt,
         api_base=None,
-        auth_token=None,
         model=None,
         seed=0,
         quality="low",
@@ -204,6 +195,13 @@ class GPTImage1Generate(ComfyNodeABC):
         n=1,
         size="1024x1024",
     ):
+        # Retrieve the auth token from environment variable
+        auth_token = os.environ.get("OPENAI_API_KEY")
+        if not auth_token:
+            # Optionally, raise an error or log a warning if the key is missing
+            # For now, let it proceed, the API call will likely fail without a token
+            print("Warning: OPENAI_API_KEY environment variable not set.")
+
         # 如果model为空，则使用默认的模型
         if model is None:
             model = "gpt-image-1"
